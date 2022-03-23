@@ -38,7 +38,6 @@
 			"**/Thumbs.db": true,
 			"**/.dart_tool": true,
 			"**/.idea": true,
-			"**/.vscode": true,
 			"**/*.iml": true,
 			"**/.metadata": true,
 			"**/.packages": true,
@@ -51,10 +50,14 @@
 			".flutter-plugins": true,
 			".flutter-plugins-dependencies": true,
 			".gitignore": true,
+			".vscode": true,
 			"android": true,
+			"ios": true,
 			"build": true,
 			"packages": true,
-			"project.dart": true
+			"project.dart": true,
+			"web": true,
+			"windows": true
 		},
 		"explorerExclude.backup": null
 	}
