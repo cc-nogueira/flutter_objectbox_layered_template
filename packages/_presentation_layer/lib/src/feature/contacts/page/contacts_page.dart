@@ -5,6 +5,8 @@ import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../common/page/loading_page.dart';
+import '../../../common/page/message_page.dart';
 import '../../../routes/routes.dart';
 
 /// Contacts page.
@@ -18,17 +20,20 @@ class ContactsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final usecase = ref.watch(contactsUsecaseProvider);
-    final contacts = ref.watch(allContactsProvider);
-    return _ContactsPage(contacts: contacts, usecase: usecase);
+    return ref.watch(watchAllContactsProvider).when(
+        loading: () => const LoadingPage('Contacts'),
+        data: (contacts) => _ContactsPage(contacts: contacts, usecase: usecase),
+        error: (error, _) => MessagePage.error(error));
   }
 }
 
 class _ContactsPage extends StatelessWidget {
-  const _ContactsPage({Key? key, required this.contacts, required this.usecase})
+  _ContactsPage({Key? key, required this.contacts, required this.usecase})
       : super(key: key);
 
   final List<Contact> contacts;
   final ContactsUsecase usecase;
+  final Faker _faker = Faker();
 
   @override
   Widget build(BuildContext context) {
@@ -72,19 +77,7 @@ class _ContactsPage extends StatelessWidget {
   Contact _newContact() => usecase.save(_createContact());
 
   Contact _createContact() {
-    if (!contacts.any((element) => element.name == 'Trygve Reenskaug')) {
-      return const Contact(name: 'Trygve Reenskaug');
-    }
-    if (!contacts.any((element) => element.name == 'Gilad Bracha')) {
-      return const Contact(name: 'Gilad Bracha');
-    }
-    if (!contacts.any((element) => element.name == 'Robert Martin')) {
-      return const Contact(name: 'Robert Martin');
-    }
-    if (!contacts.any((element) => element.name == 'Martin Fowler')) {
-      return const Contact(name: 'Martin Fowler');
-    }
-    return Contact(name: Faker().person.name());
+    return Contact(name: _faker.person.name(), uuid: _faker.guid.guid());
   }
 }
 

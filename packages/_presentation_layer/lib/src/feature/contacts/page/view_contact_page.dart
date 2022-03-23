@@ -4,6 +4,8 @@ import 'package:_domain_layer/domain_layer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../common/page/loading_page.dart';
+import '../../../common/page/message_page.dart';
 import '../widget/message_widget.dart';
 
 class ViewContactPage extends ConsumerWidget {
@@ -13,8 +15,10 @@ class ViewContactPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final contact = ref.watch(contactProvider(id));
-    return _ViewContactPage(contact);
+    return ref.watch(watchContactProvider(id)).when(
+        loading: () => const LoadingPage('Contact'),
+        data: (contact) => _ViewContactPage(contact),
+        error: (error, _) => MessagePage.error(error));
   }
 }
 

@@ -1,24 +1,32 @@
+import 'dart:async';
+
 import '../entity/entity.dart';
 import '../exception/entity_not_found_exception.dart';
-import '../repository/entity_notifier_repository.dart';
+import '../repository/entity_stream_repository.dart';
 
 /// Usecase with common Entity business rules.
 ///
-/// This class must be injected with an [EntityNotifierRepository].
+/// This class must be injected with an [EntityStreamRepository].
 ///
-/// It provides an API to access and update [Entity]s mainly by its notifier API.
+/// It provides an API to access and update [Entity]s mainly by its stream API.
 /// See providers.
-abstract class EntityUsecase<T extends Entity> {
-  EntityUsecase({required EntityNotifierRepository<T> repository})
+abstract class EntityStreamUsecase<T extends Entity> {
+  EntityStreamUsecase({required EntityStreamRepository<T> repository})
       : _repository = repository;
 
-  final EntityNotifierRepository<T> _repository;
+  final EntityStreamRepository<T> _repository;
 
   /// Returns a single entity from storage by id.
   ///
   /// Expects that the repository throws a EntityNotFoundException when id is not
   /// found.
   T get(int id) => _repository.get(id);
+
+  /// Returns a stream of a single entity, for its live state in storage.
+  ///
+  /// Expects that the repository throws a EntityNotFoundException when id is not
+  /// found.
+  Stream<T> watch(int id) => _repository.watch(id);
 
   /// Returns all entities from storage.
   ///
@@ -29,6 +37,19 @@ abstract class EntityUsecase<T extends Entity> {
     sort(list);
     return list;
   }
+
+  /// Returns all entities stream from storage.
+  ///
+  /// Each fired list will be ordered using subclass reponsibility [_compare].
+  Stream<List<T>> watchAll() => _repository.watchAll().transform(
+        StreamTransformer.fromHandlers(
+          handleData: (data, sink) {
+            final dataList = data.toList(growable: false);
+            sort(dataList);
+            sink.add(List.unmodifiable(dataList));
+          },
+        ),
+      );
 
   /// Sort list of entities.
   ///

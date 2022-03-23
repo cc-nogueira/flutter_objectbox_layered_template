@@ -3,7 +3,7 @@ import 'package:riverpod/riverpod.dart';
 import '../layer/data_layer.dart';
 
 /// Data Layer provider
-final dataLayerProvider = Provider((_) => const DataLayer());
+final dataLayerProvider = Provider((_) => DataLayer());
 
 /// ContactsRepository interface implementation provider
 final contactsRepositoryProvider =

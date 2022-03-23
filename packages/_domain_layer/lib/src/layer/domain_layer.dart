@@ -1,10 +1,8 @@
 import 'package:_core_layer/core_layer.dart';
-import 'package:riverpod/riverpod.dart';
 
-import '../entity/contact.dart';
-import '../repository/contacts_repository.dart';
-import '../service/message_service.dart';
-import '../usecase/contacts_usecase.dart';
+import '../repository/example/contacts_repository.dart';
+import '../service/example/message_service.dart';
+import '../usecase/example/contacts_usecase.dart';
 
 /// Function definition for Domain Layer dependencies
 typedef DomainConfiguration = void Function({
@@ -24,7 +22,6 @@ typedef DomainConfiguration = void Function({
 ///   - [contactsUsecaseProvider]
 class DomainLayer extends AppLayer {
   late final ContactsUsecase contactsUsecase;
-  late final StateNotifier<List<Contact>> contactsRepositoryNotifier;
 
   void configure({
     required ContactsRepository contactsRepository,
@@ -34,6 +31,5 @@ class DomainLayer extends AppLayer {
       repository: contactsRepository,
       messageService: messageService,
     );
-    contactsRepositoryNotifier = contactsRepository;
   }
 }

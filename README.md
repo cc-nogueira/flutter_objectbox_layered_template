@@ -1,12 +1,26 @@
-# A Flutter implementation of **4+2 Layered Architecture** structure.
+# A Flutter implementation of **4+2 Layered Architecture** structure using ObjectBox persistence
 
 This is an implementation of the architecture described in **4+2 Layered Architecture** and its
 companion publication **4+2 Layered Architecture - A Flutter Implementation**. 
 
+This template extends [flutter_layered_template](https://github.com/cc-nogueira/flutter_layered_template) converting "in memory" storage to use ObjectBox library.
+
+> This is actually a conversion from a NotifierAPI to a StreamAPI.  
+> It is a case when a change for an outer layer does impact an inner layer (Domain)
+> because the new library offers a different API and we better using it!  
+> Stream and Future APIs are common to deal with remote invocations and async calls,
+> but it is also very handy for observed content notifications, replacing  the Notifier API.  
+> Although we had to change the API in the Domain's Repository and UseCase interfaces the
+> imapact was very well defined, mainly in UseCase's API clients (Presentation Layer).  
+> And here we see how great Riverpod consumer API is... it was simple and beautiful to
+> convert from NotifierAPI to StreamAPI in Presentation Widgets!
+
+This template:
 - Provides the project structure with all suggested layers, each in a separate package.
 - Implements a simple domain in a runnable sample application.
-- Two Flutter dependencies are notable for this implementation:
+- Has three Flutter dependencies to make note of:
   - [Flutter Riverpod](https://pub.dev/packages/flutter_riverpod)
+  - [ObjectBox](https://pub.dev/packages/objectbox)
   - [Freezed](https://pub.dev/packages/freezed)
 
 ---
@@ -140,7 +154,7 @@ simple application with full layered architecture structure.
 This a start up template for a layered architecture project. 
 1. Click on **Use this template** on this template main page in github:
 
-   https://github.com/cc-nogueira/flutter_layered_template/
+   https://github.com/cc-nogueira/flutter_layered_template_objectbox/
 
 2. **Clone your repository** to your development machine:
 ```bash

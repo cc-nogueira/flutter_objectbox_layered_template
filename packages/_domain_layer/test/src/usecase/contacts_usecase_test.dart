@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:_domain_layer/domain_layer.dart';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -63,6 +65,39 @@ void main() {
     });
   });
 
+  group('watchContact', () {
+    test(
+        'should return a stream with current state of a contact when id exists in storage',
+        () async {
+      late StreamController<Contact> controller;
+      controller =
+          StreamController<Contact>(onListen: () => controller.add(contact1));
+      when(mockRepository.asMock().watch(any))
+          .thenAnswer((_) => controller.stream);
+
+      final stream = usecase.watch(contact1.id);
+      verify(mockRepository.watch(contact1.id));
+
+      int count = 0;
+      final changedContact = contact1.copyWith(name: 'other name');
+      final subscription = stream.listen((event) {
+        ++count;
+        if (count == 1) {
+          expect(event, contact1);
+          controller.add(changedContact);
+        } else if (count == 2) {
+          expect(event, changedContact);
+          controller.close();
+        } else {
+          fail('did not expect more events');
+        }
+      });
+      await subscription.asFuture();
+      expect(count, 2);
+      verifyNoMoreInteractions(mockRepository);
+    });
+  });
+
   group('getAll', () {
     test('should return an empty list when the repository is empty', () {
       when(mockRepository.getAll()).thenReturn([]);
@@ -86,6 +121,41 @@ void main() {
       verify(mockRepository.getAll());
       verifyNoMoreInteractions(mockRepository);
       verifyNoMoreInteractions(mockService);
+    });
+  });
+
+  group('watchAllContacts', () {
+    test(
+        'should return a stream with current contacts in storage ordered by name even when storage is empty',
+        () async {
+      late StreamController<List<Contact>> controller;
+      controller = StreamController<List<Contact>>(
+          onListen: () => controller.add(<Contact>[]));
+
+      when(mockRepository.watchAll()).thenAnswer((_) => controller.stream);
+
+      final stream = usecase.watchAll();
+      verify(mockRepository.watchAll());
+
+      int count = 0;
+      final subscription = stream.listen((event) {
+        ++count;
+        if (count == 1) {
+          expect(event, isEmpty);
+          controller.add([contact1]);
+        } else if (count == 2) {
+          expect(event, [contact1]);
+          controller.add([contact1, contact2]);
+        } else if (count == 3) {
+          expect(event, [contact2, contact1]);
+          controller.close();
+        } else {
+          fail('did not expect more events');
+        }
+      });
+      await subscription.asFuture();
+      expect(count, 3);
+      verifyNoMoreInteractions(mockRepository);
     });
   });
 
