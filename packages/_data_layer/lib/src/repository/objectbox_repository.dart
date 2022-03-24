@@ -123,6 +123,42 @@ abstract class ObjectboxRepository<E extends Entity, M extends Model>
     return mapper.mapEntity(model);
   }
 
+  /// Save a list of entities in storage and return the corresponding saved list.
+  ///
+  /// For each entity:
+  ///   - If the entity id is 0 it should generate the next id, add the new
+  ///     entity to storage and return it.
+  ///
+  ///   - If the entity id is not 0 update an existint entry with that id.
+  ///
+  /// Throws an [EntityNotFoundException] if any entity to update is not found
+  /// in storage. In this case there will be no updates.
+  @override
+  List<E> saveAll(List<E> entities) {
+    final updatePairs = <MapEntry<M, M>>[];
+    for (final entity in entities) {
+      final model = mapper.mapModel(entity);
+      if (model.id > 0) {
+        final boxModel = box.get(entity.id);
+        if (boxModel == null) {
+          throw const EntityNotFoundException();
+        }
+        updatePairs.add(MapEntry(model, boxModel));
+      }
+    }
+    for (final pair in updatePairs) {
+      updateDependents(toSaveModel: pair.key, boxModel: pair.value);
+    }
+
+    final models = mapper.mapModels(entities);
+    try {
+      box.putMany(models);
+    } on ArgumentError catch (e) {
+      throw EntityNotFoundException(e.message);
+    }
+    return mapper.mapEntities(models);
+  }
+
   /// Hook for subclasses to invoke [updateDependentsToMany] for each of its
   /// model [ToMany] relations, for example:
   ///
