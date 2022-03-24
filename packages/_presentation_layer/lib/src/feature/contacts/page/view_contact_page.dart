@@ -14,12 +14,12 @@ class ViewContactPage extends ConsumerWidget {
   final int id;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(watchContactProvider(id)).when(
-        loading: () => const LoadingPage('Contact'),
-        data: (contact) => _ViewContactPage(contact),
-        error: (error, _) => MessagePage.error(error));
-  }
+  Widget build(BuildContext context, WidgetRef ref) =>
+      ref.watch(watchContactProvider(id)).when(
+            loading: LoadingPage.builder('Contact'),
+            error: MessagePage.errorBuilder,
+            data: (contact) => _ViewContactPage(contact),
+          );
 }
 
 class _ViewContactPage extends StatelessWidget {

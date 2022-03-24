@@ -21,9 +21,10 @@ class ContactsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final usecase = ref.watch(contactsUsecaseProvider);
     return ref.watch(watchAllContactsProvider).when(
-        loading: () => const LoadingPage('Contacts'),
-        data: (contacts) => _ContactsPage(contacts: contacts, usecase: usecase),
-        error: (error, _) => MessagePage.error(error));
+          loading: LoadingPage.builder('Contacts'),
+          error: MessagePage.errorBuilder,
+          data: (data) => _ContactsPage(contacts: data, usecase: usecase),
+        );
   }
 }
 
