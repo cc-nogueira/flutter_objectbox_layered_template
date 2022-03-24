@@ -1,18 +1,21 @@
 import '../entity/entity.dart';
 import '../exception/entity_not_found_exception.dart';
-import '../repository/entity_notifier_repository.dart';
+import '../repository/entity_repository.dart';
 
 /// Usecase with common Entity business rules.
 ///
-/// This class must be injected with an [EntityNotifierRepository].
+/// This class must be injected with an [EntityRepository].
 ///
-/// It provides an API to access and update [Entity]s mainly by its notifier API.
+/// It provides an API to access and update [Entity]s witout a Stream API.
 /// See providers.
-abstract class EntityNotifierUsecase<T extends Entity> {
-  const EntityNotifierUsecase({required EntityNotifierRepository<T> repository})
+abstract class EntityUsecase<T extends Entity> {
+  const EntityUsecase({required EntityRepository<T> repository})
       : _repository = repository;
 
-  final EntityNotifierRepository<T> _repository;
+  final EntityRepository<T> _repository;
+
+  /// Returns the number of entities in storage.
+  int count() => _repository.count();
 
   /// Returns a single entity from storage by id.
   ///
@@ -66,6 +69,30 @@ abstract class EntityNotifierUsecase<T extends Entity> {
     validate(entity);
     final adjusted = adjust(entity);
     return _repository.save(adjusted);
+  }
+
+  /// Save a list of entities in the repository and return the corresponding saved list.
+  ///
+  /// For each entity:
+  ///   - Call validate before saving. It is subclass responsibility to
+  ///     implementvalidate that would throw a VaidationException if contact
+  ///     does not pass validation.
+  ///
+  ///   - If contact's id is 0 the repository will be responsible to generate
+  ///     a unique id, persist and return this new entity with its generated id.
+  ///
+  ///   - If contact's id is not 0 the repository should update the entity with
+  ///     the given id.
+  ///
+  ///   - If the entity to update is not found in storage the repository must throw
+  ///     an [EntityNotFoundException]. In this case no operation should be performed.
+  List<T> saveAll(List<T> entities) {
+    final adjusted = <T>[];
+    for (final entity in entities) {
+      validate(entity);
+      adjusted.add(adjust(entity));
+    }
+    return _repository.saveAll(adjusted);
   }
 
   /// Validate contact's content.
