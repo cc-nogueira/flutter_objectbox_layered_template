@@ -3,8 +3,7 @@ import '../entity_stream_repository.dart';
 
 /// Contacts Repository interface.
 ///
-/// This repository defines a StateNotifier type of API (in contrast to a stream
-/// API).
+/// Most method return values may be watched by StreamProviders.
 abstract class ContactsRepository extends EntityStreamRepository<Contact> {
   /// Get a Contact from storage by uuid.
   ///
