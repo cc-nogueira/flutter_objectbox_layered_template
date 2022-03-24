@@ -26,6 +26,13 @@ abstract class ObjectboxRepository<E extends Entity, M extends Model>
   /// Id of my model
   QueryIntegerProperty<M> get idProperty;
 
+  /// Returns the number of entities in the repository.
+  ///
+  /// May count only up to limit if adequate.
+  /// Count all if limit is set to default value of zero.
+  @override
+  int count({int limit = 0}) => box.count(limit: limit);
+
   /// Returns an entity from storage by id.
   ///
   /// Throws [EntityNotFoundException] if none is found with id.
