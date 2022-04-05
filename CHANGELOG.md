@@ -2,7 +2,7 @@
 
 ### Template for Flutter Layered Architecture using ObjectBox persistence.
 > This is an extension from Flutter Layered Template now using StreamAPI and
-> ObjectBox for local persisntece.  
+> ObjectBox for local persistence.  
 
 > Defined **Layered Architecture Structure** with **each layer in an internal package**:  
 >   - **Core** (Basic interfaces and utilities)  
