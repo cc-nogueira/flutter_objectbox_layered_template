@@ -1,7 +1,4 @@
-## [0.0.2] - 2022-04-05
-Fix clean command in project.dart that would not run without building.
-
-## [0.0.1] - 2022-03-22
+## [0.0.1] - 2022-04-05
 
 ### Template for Flutter Layered Architecture using ObjectBox persistence.
 > This is an extension from Flutter Layered Template now using StreamAPI and

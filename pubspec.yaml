@@ -2,7 +2,7 @@ name: flutter_objectbox_layered_template
 description: Flutter Layered Template with ObjectBox Persistence
 
 publish_to: 'none'
-version: 0.0.2
+version: 0.0.1
 
 environment:
   sdk: ">=2.16.1 <3.0.0"
