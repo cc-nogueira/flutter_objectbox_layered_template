@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../common/page/loading_page.dart';
 import '../../../common/page/message_page.dart';
+import '../../../l10n/translations.dart';
 import '../widget/message_widget.dart';
 
 class ViewContactPage extends ConsumerWidget {
@@ -14,11 +15,14 @@ class ViewContactPage extends ConsumerWidget {
   final int id;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => ref.watch(watchContactProvider(id)).when(
-        loading: LoadingPage.builder('Contact'),
-        error: ErrorMessagePage.errorBuilder,
-        data: (contact) => _ViewContactPage(contact),
-      );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final tr = Translations.of(context)!;
+    return ref.watch(watchContactProvider(id)).when(
+          loading: LoadingPage.builder(tr.title_contact_page),
+          error: ErrorMessagePage.errorBuilder,
+          data: (contact) => _ViewContactPage(contact),
+        );
+  }
 }
 
 class _ViewContactPage extends StatelessWidget {
@@ -28,8 +32,9 @@ class _ViewContactPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tr = Translations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Contact')),
+      appBar: AppBar(title: Text(tr.title_contact_page)),
       body: _contactDetails(context),
     );
   }
