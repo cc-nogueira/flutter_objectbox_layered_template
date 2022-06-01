@@ -29,7 +29,7 @@ class DataLayer extends AppLayer {
 
   Future<Store> _openStore() async {
     final appDir = await getApplicationDocumentsDirectory();
-    final objectboxPath = appDir.path + '/objectbox';
+    final objectboxPath = '${appDir.path}/objectbox';
     if (Store.isOpen(objectboxPath)) {
       return Store.attach(getObjectBoxModel(), objectboxPath);
     } else {
@@ -41,20 +41,11 @@ class DataLayer extends AppLayer {
     final box = _store.box<ContactModel>();
     if (box.isEmpty()) {
       box.putMany([
-        ContactModel(
-            name: 'Trygve Reenskaug',
-            uuid: '082a4b92-dbed-4b34-8a76-77100beace88'),
-        ContactModel(
-            name: 'Gilad Bracha', uuid: 'd12acf0d-ccbc-482b-8b19-d4e7185ac653'),
-        ContactModel(
-            name: 'Robert C. Martin',
-            uuid: '36e3073d-7acb-4f41-96e6-ba25108332d2'),
-        ContactModel(
-            name: 'Martin Fowler',
-            uuid: 'bfb17eb8-4274-4aff-8d7c-d7caa709efa7'),
-        ContactModel(
-            name: 'Ricardo Nogueira',
-            uuid: '05cd0e2a-a344-4fae-a960-8624a7db8be0'),
+        ContactModel(name: 'Trygve Reenskaug', uuid: '082a4b92-dbed-4b34-8a76-77100beace88'),
+        ContactModel(name: 'Gilad Bracha', uuid: 'd12acf0d-ccbc-482b-8b19-d4e7185ac653'),
+        ContactModel(name: 'Robert C. Martin', uuid: '36e3073d-7acb-4f41-96e6-ba25108332d2'),
+        ContactModel(name: 'Martin Fowler', uuid: 'bfb17eb8-4274-4aff-8d7c-d7caa709efa7'),
+        ContactModel(name: 'Ricardo Nogueira', uuid: '05cd0e2a-a344-4fae-a960-8624a7db8be0'),
       ]);
     }
   }

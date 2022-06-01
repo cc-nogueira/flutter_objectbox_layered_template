@@ -11,10 +11,9 @@ import 'package:riverpod/riverpod.dart';
 /// It is a quick implementation that does not need data
 /// mappers and uses Riverpod StateNotifier for storage and state change
 /// notifications.
-class InMemoryNotifierRepository<T extends Entity>
-    extends StateNotifier<List<T>> implements EntityNotifierRepository<T> {
-  InMemoryNotifierRepository({List<T> initialData = const []})
-      : super(initialData);
+class InMemoryNotifierRepository<T extends Entity> extends StateNotifier<List<T>>
+    implements EntityNotifierRepository<T> {
+  InMemoryNotifierRepository({List<T> initialData = const []}) : super(initialData);
 
   /// Returns the number of entities in the repository.
   ///

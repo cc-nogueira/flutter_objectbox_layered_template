@@ -62,10 +62,7 @@ abstract class ObjectboxRepository<E extends Entity, M extends Model>
       throw const EntityNotFoundException();
     }
 
-    return box
-        .query(idProperty.equals(id))
-        .watch(triggerImmediately: true)
-        .map<E>((q) {
+    return box.query(idProperty.equals(id)).watch(triggerImmediately: true).map<E>((q) {
       final model = q.findFirst();
       if (model == null) {
         throw const EntityNotFoundException();
@@ -78,10 +75,8 @@ abstract class ObjectboxRepository<E extends Entity, M extends Model>
   ///
   /// Stream will be notified with all entities whenever the repository changes.
   @override
-  Stream<List<E>> watchAll() => box
-      .query()
-      .watch(triggerImmediately: true)
-      .map<List<E>>((q) => mapper.mapEntities(q.find()));
+  Stream<List<E>> watchAll() =>
+      box.query().watch(triggerImmediately: true).map<List<E>>((q) => mapper.mapEntities(q.find()));
 
   /// Removes a model from storage by id.
   ///
