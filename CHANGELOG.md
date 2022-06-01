@@ -1,3 +1,12 @@
+## [0.0.2] - 2022-06-01
+> Updated to the latest version of Layered Template:
+> Flutter updated to 3.0 and Dart to 2.17.  
+> Configuring internationalization.  
+>  
+> - Using DART 2.17 new super arguments.
+> - Using lint 2.0.1.
+> - Using Flutter l10n for internationalization with ARB files.
+
 ## [0.0.1] - 2022-04-05
 
 ### Template for Flutter Layered Architecture using ObjectBox persistence.
