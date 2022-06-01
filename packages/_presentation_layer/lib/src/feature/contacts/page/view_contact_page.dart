@@ -9,17 +9,16 @@ import '../../../common/page/message_page.dart';
 import '../widget/message_widget.dart';
 
 class ViewContactPage extends ConsumerWidget {
-  const ViewContactPage({Key? key, required this.id}) : super(key: key);
+  const ViewContactPage({super.key, required this.id});
 
   final int id;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) =>
-      ref.watch(watchContactProvider(id)).when(
-            loading: LoadingPage.builder('Contact'),
-            error: MessagePage.errorBuilder,
-            data: (contact) => _ViewContactPage(contact),
-          );
+  Widget build(BuildContext context, WidgetRef ref) => ref.watch(watchContactProvider(id)).when(
+        loading: LoadingPage.builder('Contact'),
+        error: ErrorMessagePage.errorBuilder,
+        data: (contact) => _ViewContactPage(contact),
+      );
 }
 
 class _ViewContactPage extends StatelessWidget {
