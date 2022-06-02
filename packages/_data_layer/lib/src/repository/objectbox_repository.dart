@@ -18,9 +18,13 @@ import '../model/model.dart';
 /// invoked.
 abstract class ObjectboxRepository<E extends Entity, M extends Model>
     implements EntityStreamRepository<E> {
-  ObjectboxRepository({required this.box, required this.mapper});
+  /// Const constructor with a Box<M> and a Mapper<E,M>.
+  const ObjectboxRepository({required this.box, required this.mapper});
 
+  /// ObjectBox Box<M>
   final Box<M> box;
+
+  /// Mapper for Entity / Model conversions.
   final EntityMapper<E, M> mapper;
 
   /// Id of my model

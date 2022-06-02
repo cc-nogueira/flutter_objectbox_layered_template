@@ -5,24 +5,30 @@ import '../../mapper/example/contact_mapper.dart';
 import '../../model/example/contact_model.dart';
 import '../objectbox_repository.dart';
 
-class ObjectboxContactsRepository
-    extends ObjectboxRepository<Contact, ContactModel>
+/// ObjectBox Contacts Repository implementation.
+///
+/// Implements domain ContactsRepository as an ObjectBoxRepository
+class ObjectboxContactsRepository extends ObjectboxRepository<Contact, ContactModel>
     implements ContactsRepository {
-  ObjectboxContactsRepository({required Box<ContactModel> box})
-      : super(box: box, mapper: const ContactMapper());
+  /// Const constructor receives a Box<ContactModel>.
+  const ObjectboxContactsRepository({required super.box}) : super(mapper: const ContactMapper());
 
   /// Id of my model
   @override
   get idProperty => ContactModel_.id;
+
+  /// uuid property for query by Uuid
   get uuidProperty => ContactModel_.uuid;
 
   @override
   Contact getByUuid(String uuid) {
-    final q = box.query(uuidProperty.equals(uuid)).build();
-    final model = q.findFirst();
+    final model = _getModelByUuid(uuid);
     if (model == null) {
       throw const EntityNotFoundException();
     }
     return mapper.mapEntity(model);
   }
+
+  ContactModel? _getModelByUuid(String uuid) =>
+      box.query(uuidProperty.equals(uuid)).build().findFirst();
 }
