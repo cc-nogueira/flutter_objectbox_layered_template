@@ -1,3 +1,4 @@
+import 'package:meta/meta.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../entity/example/contact.dart';
@@ -15,13 +16,14 @@ import '../entity_stream_usecase.dart';
 /// It provides an API to access and update [Contact] entities.
 class ContactsUsecase extends EntityStreamUsecase<Contact> {
   ContactsUsecase({
-    required ContactsRepository repository,
+    required ContactsRepository super.repository,
     required MessageService messageService,
-  })  : _contactsRepository = repository,
-        _messageService = messageService,
-        super(repository: repository);
+  }) : _messageService = messageService;
 
-  final ContactsRepository _contactsRepository;
+  @internal
+  @override
+  ContactsRepository get repository => super.repository as ContactsRepository;
+
   final MessageService _messageService;
   final _uuid = const Uuid();
 
@@ -31,7 +33,7 @@ class ContactsUsecase extends EntityStreamUsecase<Contact> {
   /// this uuid.
   Contact getByUuid(String uuid, {required Contact Function() orElse}) {
     try {
-      return _contactsRepository.getByUuid(uuid);
+      return repository.getByUuid(uuid);
     } on Exception {
       return orElse();
     }
@@ -41,8 +43,7 @@ class ContactsUsecase extends EntityStreamUsecase<Contact> {
   ///
   /// Returns a Future for current message for a contact.
   /// Expects the future to return null if there are no messages for this contact.
-  Future<Message?> getMessageFor(contact) =>
-      _messageService.getMessageFor(contact);
+  Future<Message?> getMessageFor(contact) => _messageService.getMessageFor(contact);
 
   /// Compare two contacts by name
   @override
@@ -64,8 +65,7 @@ class ContactsUsecase extends EntityStreamUsecase<Contact> {
   /// Trim contacts name if necessary.
   @override
   Contact adjust(Contact contact) {
-    var adjusted =
-        contact.uuid.isEmpty ? contact.copyWith(uuid: _uuid.v4()) : contact;
+    var adjusted = contact.uuid.isEmpty ? contact.copyWith(uuid: _uuid.v4()) : contact;
 
     final adjustedName = contact.name.trim();
     if (contact.name != adjustedName) {
