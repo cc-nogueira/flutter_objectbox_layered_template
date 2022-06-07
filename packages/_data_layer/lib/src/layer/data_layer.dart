@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:_core_layer/core_layer.dart';
 import 'package:_domain_layer/domain_layer.dart';
 
@@ -29,13 +31,16 @@ class DataLayer extends AppLayer {
 
   Future<Store> _openStore() async {
     final appDir = await getApplicationDocumentsDirectory();
-    final objectboxPath = '${appDir.path}/objectbox';
+    final objectboxPath =
+        _isMobile ? '${appDir.path}/objectbox' : '${appDir.path}/objectbox/project_name';
     if (Store.isOpen(objectboxPath)) {
       return Store.attach(getObjectBoxModel(), objectboxPath);
     } else {
       return Store(getObjectBoxModel(), directory: objectboxPath);
     }
   }
+
+  bool get _isMobile => Platform.isAndroid || Platform.isIOS;
 
   void _initDataWhenEmpty() {
     final box = _store.box<ContactModel>();
